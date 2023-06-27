@@ -43,7 +43,16 @@ class Player:
 
 
 class Game:
-    def __init__(self, num_of_players=2, initial_bank=500.0, rounds=4, dice_sides=6, dice_number=1):
+    def __init__(
+            self,
+            num_of_players=2,
+            initial_bank=500.0,
+            rounds=4,
+            dice_sides=6,
+            dice_number=1,
+            only_cpu = False
+    ):
+        self.only_cpu = only_cpu
         self.dice_number = dice_number
         self.dice_sides = dice_sides
         self.rounds = rounds
@@ -57,7 +66,10 @@ class Game:
             Player(True, self.initial_bank, self.dice_sides, self.dice_number)
             for _ in range(self.num_of_players - 1)
         ]
-        self.players.append(Player(False, self.initial_bank, self.dice_sides, self.dice_number))
+
+        last_player = Player(self.only_cpu, self.initial_bank, self.dice_sides, self.dice_number)
+
+        self.players.append(last_player)
 
     def throw_dices(self):
         players_next_stage = []
@@ -68,6 +80,7 @@ class Game:
                 print(f"Player has {player.bank} and cannot continue playing ...")
                 continue
             player.throw_dice()
+
             if player.cpu:
                 player.bet(minimum_amount=minimum_bet)
             else:
